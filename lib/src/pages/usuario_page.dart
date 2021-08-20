@@ -1,7 +1,9 @@
+import 'package:app_atractivos/src/bloc/auth_service.dart';
 import 'package:app_atractivos/src/models/usuarios_model.dart';
 import 'package:app_atractivos/src/providers/usuarios_provider.dart';
 import 'package:app_atractivos/src/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UsuarioPage extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context, listen: false);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -28,7 +31,10 @@ class _UsuarioPageState extends State<UsuarioPage> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, 'login');
+                authService.logout();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    'login', (Route<dynamic> route) => false);
+                // Navigator.pushReplacementNamed(context, 'login');
               })
         ],
       ),

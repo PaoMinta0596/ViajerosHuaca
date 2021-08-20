@@ -31,14 +31,6 @@ class EmergenciasPage extends StatelessWidget {
         title: Text('Servicios de emergencia'),
         centerTitle: true,
         elevation: 4,
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.home,
-                size: 35,
-              ),
-              onPressed: () => Navigator.pushReplacementNamed(context, 'home'))
-        ],
       ),
 
       // drawer: MenuWidget(),

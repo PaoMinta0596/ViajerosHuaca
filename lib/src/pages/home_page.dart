@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    prefs.ultimaPagina = 'home';
+    // prefs.ultimaPagina = 'home';
     return Scaffold(
         appBar: AppBar(
           elevation: 4,

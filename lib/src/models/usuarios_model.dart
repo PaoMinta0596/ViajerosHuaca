@@ -18,6 +18,7 @@ class UsuariosModel {
     this.edad,
     this.ciudad,
     this.pais,
+    this.rol = 'Usuario',
     this.sitioPreferido,
   });
 
@@ -28,6 +29,7 @@ class UsuariosModel {
   String edad;
   String ciudad;
   String pais;
+  String rol;
   String sitioPreferido;
 
   factory UsuariosModel.fromJson(Map<String, dynamic> json) => UsuariosModel(
@@ -38,6 +40,7 @@ class UsuariosModel {
         edad: json["edad"],
         ciudad: json["ciudad"],
         pais: json["pais"],
+        rol: json["rol"],
         sitioPreferido: json["sitio_preferido"],
       );
 
@@ -49,6 +52,7 @@ class UsuariosModel {
         "edad": edad,
         "ciudad": ciudad,
         "pais": pais,
+        "rol": rol,
         "sitio_preferido": sitioPreferido,
       };
 }

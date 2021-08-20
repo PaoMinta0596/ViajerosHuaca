@@ -1,129 +1,106 @@
-import 'package:app_atractivos/src/bloc/login_bloc.dart';
-import 'package:app_atractivos/src/bloc/provider.dart';
-import 'package:app_atractivos/src/providers/usuario_provider.dart';
+import 'package:app_atractivos/src/bloc/auth_service.dart';
 import 'package:app_atractivos/src/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:app_atractivos/src/providers/login_form_provider.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
+import 'package:app_atractivos/src/ui/input_decorations.dart';
+import 'package:app_atractivos/src/widgets/widgets.dart';
+
+class LoginPage extends StatelessWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: AuthBackground(
+            child: SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: 220),
+          CardContainer(
+              child: Column(
+            children: [
+              SizedBox(height: 10),
+              Text('Ingresar', style: Theme.of(context).textTheme.headline4),
+              SizedBox(height: 30),
+              ChangeNotifierProvider(
+                  create: (_) => LoginFormProvider(), child: _LoginForm())
+            ],
+          )),
+          SizedBox(height: 40),
+          TextButton(
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, 'register'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(
+                      Color(0xff57BC90).withOpacity(0.1)),
+                  shape: MaterialStateProperty.all(StadiumBorder())),
+              child: Text(
+                'Crear una nueva cuenta',
+                style: TextStyle(
+                  fontSize: 17,
+                  // fontWeight: FontWeight.bold,
+                ),
+              )),
+          SizedBox(height: 50),
+        ],
+      ),
+    )));
+  }
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final usuarioProvider = new UsuarioProvider();
+class _LoginForm extends StatefulWidget {
+  @override
+  __LoginFormState createState() => __LoginFormState();
+}
 
+class __LoginFormState extends State<_LoginForm> {
   bool cubrir = true;
+
   IconData icono = Icons.lock_outline;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(
-      children: <Widget>[
-        _crearFondo(context),
-        _loginForm(context),
-        SafeArea(
-          child: Container(
-            alignment: Alignment.topRight,
-            padding: EdgeInsets.only(right: 10),
-            child: ElevatedButton.icon(
-              onPressed: () => Navigator.pushNamed(context, 'emergencias'),
-              icon: Icon(Icons.policy),
-              label: Text('Emergencias'),
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(10),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xff015249)),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ));
-  }
+    final loginForm = Provider.of<LoginFormProvider>(context);
 
-  Widget _loginForm(BuildContext context) {
-    final bloc = ProviderUs.of(context);
-    final size = MediaQuery.of(context).size;
+    return Container(
+      child: Form(
+        key: loginForm.formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            TextFormField(
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: 'Ingrese su correo electrónico',
+                  labelText: 'Correo electrónico',
+                  prefixIcon: Icons.alternate_email_rounded),
+              onChanged: (value) => loginForm.email = value,
+              validator: (value) {
+                String pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regExp = new RegExp(pattern);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          SafeArea(
-            child: Container(
-              height: 180.0,
+                return regExp.hasMatch(value ?? '')
+                    ? null
+                    : 'El valor ingresado no luce como un correo';
+              },
             ),
-          ),
-          Card(
-            elevation: 20,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              width: size.width * 0.85,
-              margin: EdgeInsets.symmetric(vertical: 30.0),
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              child: Column(
-                children: <Widget>[
-                  Text('Ingresar',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 30.0),
-                  _crearEmail(bloc),
-                  SizedBox(height: 30.0),
-                  _crearPassword(bloc),
-                  SizedBox(height: 50.0),
-                  _crearBoton(bloc)
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, 'registro'),
-            child: Text(
-              'Crear una cuenta nueva',
-              style: TextStyle(fontSize: 17),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _crearEmail(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.emailStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                icon: Icon(Icons.alternate_email, color: Color(0xff015249)),
-                hintText: 'ejemplo@correo.com',
-                labelText: 'Correo electrónico',
-                // counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changeEmail,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _crearPassword(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.passwordStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: TextField(
-            obscureText: cubrir,
-            decoration: InputDecoration(
+            SizedBox(height: 30),
+            TextFormField(
+              autocorrect: false,
+              obscureText: cubrir,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xff57BC90)),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xff57BC90), width: 2)),
+                hintText: '******',
+                labelText: 'Contraseña',
+                prefixIcon: Icon(Icons.lock_outline, color: Color(0xff57BC90)),
+                labelStyle: TextStyle(color: Colors.grey),
                 suffixIcon: GestureDetector(
                     child: Icon(icono),
                     onTap: () {
@@ -136,89 +113,57 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       });
                     }),
-                icon: Icon(Icons.lock_outline, color: Color(0xff015249)),
-                labelText: 'Contraseña',
-                // counterText: snapshot.data,
-                errorText: snapshot.error),
-            onChanged: bloc.changePassword,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _crearBoton(LoginBloc bloc) {
-    return StreamBuilder(
-      stream: bloc.formValidStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return ElevatedButton(
-            style: ButtonStyle(
-              elevation: MaterialStateProperty.all(10),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Color(0xff57BC90)),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-              child: Text('Ingresar'),
-            ),
-            onPressed: snapshot.hasData ? () => _login(bloc, context) : null);
-      },
-    );
-  }
-
-  _login(LoginBloc bloc, BuildContext context) async {
-    Map info = await usuarioProvider.login(bloc.email, bloc.password);
-
-    if (info['ok']) {
-      Navigator.pushReplacementNamed(context, 'home');
-    } else {
-      mostrarAlerta(
-          context, 'El usuario o contraseña ingresados son incorrectos');
-    }
-  }
-
-  Widget _crearFondo(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final fondoSuperior = Container(
-      // child: Image.asset(
-      //   'assets/portada.jpg',
-      //   height: size.height * 0.4,
-      //   width: double.infinity,
-      // ),
-      height: size.height * 0.4,
-      width: double.infinity,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: <Color>[Color(0xff015249), Color(0xff57BC90)])),
-    );
-
-    final circulo = Container(
-      width: 100.0,
-      height: 100.0,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.0),
-          color: Color.fromRGBO(255, 255, 255, 0.2)),
-    );
-
-    return Stack(
-      children: <Widget>[
-        fondoSuperior,
-        Positioned(top: -30.0, left: 60.0, child: circulo),
-        Positioned(top: -40.0, right: -30.0, child: circulo),
-        Positioned(top: 150.0, right: 0.0, child: circulo),
-        Positioned(top: 190.0, left: 80.0, child: circulo),
-        Container(
-          padding: EdgeInsets.only(top: 50.0),
-          child: Column(
-            children: <Widget>[
-              Image.asset(
-                'assets/VIAJEROS.png',
-                height: 160,
               ),
-            ],
-          ),
+              onChanged: (value) => loginForm.password = value,
+              validator: (value) {
+                return (value != null && value.length >= 6)
+                    ? null
+                    : 'La contraseña debe de ser de 6 caracteres';
+              },
+            ),
+            SizedBox(height: 50),
+            MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                disabledColor: Colors.grey,
+                elevation: 0,
+                color: Color(0xff57BC90),
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                    child: Text(
+                      loginForm.isLoading ? 'Espere' : 'Ingresar',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                onPressed: loginForm.isLoading
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus();
+                        final authService =
+                            Provider.of<AuthService>(context, listen: false);
+
+                        if (!loginForm.isValidForm()) return;
+
+                        loginForm.isLoading = true;
+
+                        // TODO: validar si el login es correcto
+
+                        final String errorMessage = await authService.login(
+                            loginForm.email, loginForm.password);
+
+                        if (errorMessage == null) {
+                          Navigator.pushReplacementNamed(context, 'home');
+                        } else {
+                          // print('error de base');
+                          // print(errorMessage);
+                          mostrarAlerta(context,
+                              'El usuario o contraseña ingresados son incorrectos');
+                          loginForm.isLoading = false;
+                        }
+                      }),
+            SizedBox(height: 20),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
