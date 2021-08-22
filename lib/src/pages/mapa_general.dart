@@ -58,6 +58,7 @@ class _MapaGeneralPageState extends State<MapaGeneralPage> {
         future: crearMarcadores(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
+            print('future');
             return FlutterMap(
               mapController: map,
               options: MapOptions(
@@ -139,7 +140,7 @@ class _MapaGeneralPageState extends State<MapaGeneralPage> {
       final lng = double.parse(lalo[0]);
       todosMarcadores.add(_marcadoresEventos(lat, lng, eventos[i]));
     }
-
+    print('funcion marcadores');
     return todosMarcadores;
   }
 

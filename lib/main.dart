@@ -37,7 +37,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prefs = new PreferenciasUsuario();
+    // final prefs = new PreferenciasUsuario();
     // print(prefs.token);
     return MultiProvider(
       providers: [
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
             routes: {
               'login': (_) => LoginPage(),
               'register': (_) => RegisterPage(),
-              'check': (_) => CheckAuthPage(),
+              'check': (BuildContext context) => CheckAuthPage(),
               'menu': (BuildContext context) => MenuWidget(),
               'mapa': (BuildContext context) => MapaPage(),
               'home': (BuildContext context) => HomePage(),

@@ -1,5 +1,6 @@
 import 'package:app_atractivos/src/bloc/auth_service.dart';
 import 'package:app_atractivos/src/models/usuarios_model.dart';
+import 'package:app_atractivos/src/preferencias_usuario.dart/preferencias_usuario.dart';
 import 'package:app_atractivos/src/providers/usuarios_provider.dart';
 import 'package:app_atractivos/src/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class UsuarioPage extends StatefulWidget {
 class _UsuarioPageState extends State<UsuarioPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final _prefs = new PreferenciasUsuario();
 
   UsuariosModel usuario = new UsuariosModel();
   final usuariosProvider = new UsuariosProvider();
@@ -32,6 +34,9 @@ class _UsuarioPageState extends State<UsuarioPage> {
               icon: Icon(Icons.logout),
               onPressed: () {
                 authService.logout();
+                // _prefs.email = '';
+                // _prefs.token = '';
+                // _prefs.ultimaPagina = '';
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     'login', (Route<dynamic> route) => false);
                 // Navigator.pushReplacementNamed(context, 'login');

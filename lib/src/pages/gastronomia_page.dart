@@ -4,6 +4,7 @@ import 'package:app_atractivos/src/search/search_gastronomia.dart';
 import 'package:app_atractivos/src/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class GastronomiaPage extends StatelessWidget {
   final gastronomiaProvider = new GastronomiaProvider();
   String query = '';

@@ -11,20 +11,23 @@ class UsuariosProvider {
 
   Future<UsuariosModel> cargarUsuarios() async {
     final tokenAccess = await storage.read(key: 'token') ?? '';
+    final correo = await storage.read(key: 'email') ?? '';
     final url = Uri.parse('$_url/usuarios.json?auth=$tokenAccess');
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodedData = json.decode(resp.body);
 
     UsuariosModel usuario = new UsuariosModel();
+
     if (decodedData == null) return null;
     decodedData.forEach((id, usu) {
-      if (usu.toString().toLowerCase().contains(_prefs.email.toLowerCase())) {
-        final usuTemp = UsuariosModel.fromJson(usu);
-        usuTemp.id = id;
+      final usuTemp = UsuariosModel.fromJson(usu);
+      usuTemp.id = id;
+      if (usuTemp.email == correo) {
         usuario = usuTemp;
       }
     });
+
     return usuario;
   }
 

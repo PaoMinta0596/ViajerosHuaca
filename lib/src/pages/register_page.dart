@@ -2,6 +2,7 @@ import 'package:app_atractivos/src/bloc/auth_service.dart';
 import 'package:app_atractivos/src/models/usuarios_model.dart';
 import 'package:app_atractivos/src/providers/register_form_provider.dart';
 import 'package:app_atractivos/src/providers/usuarios_provider.dart';
+import 'package:app_atractivos/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +79,7 @@ class __RegisterFormState extends State<_RegisterForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'Ingrese su nombre',
                   labelText: 'Nombre',
-                  prefixIcon: Icons.check_circle),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) => loginForm.nombre = value,
               validator: (value) {
                 if (value.isEmpty) {
@@ -96,7 +97,7 @@ class __RegisterFormState extends State<_RegisterForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'Ingrese su apellido',
                   labelText: 'Apellido',
-                  prefixIcon: Icons.check_circle),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) => loginForm.apellido = value,
               validator: (value) {
                 if (value.isEmpty) {
@@ -114,7 +115,7 @@ class __RegisterFormState extends State<_RegisterForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'Ingrese su edad',
                   labelText: 'Edad',
-                  prefixIcon: Icons.check_circle),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) => loginForm.edad = value,
               validator: (value) {
                 final n = num.tryParse(value);
@@ -133,7 +134,7 @@ class __RegisterFormState extends State<_RegisterForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'Ingrese su país',
                   labelText: 'País',
-                  prefixIcon: Icons.check_circle),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) => loginForm.pais = value,
               validator: (value) {
                 if (value.isEmpty) {
@@ -151,7 +152,7 @@ class __RegisterFormState extends State<_RegisterForm> {
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'Ingrese su ciudad',
                   labelText: 'Ciudad',
-                  prefixIcon: Icons.check_circle),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) => loginForm.ciudad = value,
               validator: (value) {
                 if (value.isEmpty) {
@@ -171,7 +172,7 @@ class __RegisterFormState extends State<_RegisterForm> {
                 ),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xff57BC90), width: 2)),
-                prefixIcon: Icon(Icons.check_circle, color: Color(0xff57BC90)),
+                prefixIcon: Icon(Icons.border_color, color: Color(0xff57BC90)),
               ),
               value: null,
               isDense: true,
@@ -198,9 +199,9 @@ class __RegisterFormState extends State<_RegisterForm> {
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecorations.authInputDecoration(
-                  hintText: 'john.doe@gmail.com',
+                  hintText: 'Ingrese su correo electrónico',
                   labelText: 'Correo electrónico',
-                  prefixIcon: Icons.alternate_email_rounded),
+                  prefixIcon: Icons.border_color),
               onChanged: (value) {
                 loginForm.email = value;
                 usuario.email = value;
@@ -228,7 +229,7 @@ class __RegisterFormState extends State<_RegisterForm> {
                     borderSide: BorderSide(color: Color(0xff57BC90), width: 2)),
                 hintText: '******',
                 labelText: 'Contraseña',
-                prefixIcon: Icon(Icons.lock_outline, color: Color(0xff57BC90)),
+                prefixIcon: Icon(Icons.border_color, color: Color(0xff57BC90)),
                 labelStyle: TextStyle(color: Colors.grey),
                 suffixIcon: GestureDetector(
                     child: Icon(icono),
@@ -251,12 +252,19 @@ class __RegisterFormState extends State<_RegisterForm> {
               },
             ),
             SizedBox(height: 40),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Color(0xff57BC90),
+            ElevatedButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                    elevation: MaterialStateProperty.all(10),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xff57BC90)),
+                    overlayColor: MaterialStateProperty.all(Colors.grey)),
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(10)),
+                // disabledColor: Colors.grey,
+                // elevation: 0,
+                // color: Color(0xff57BC90),
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                     child: Text(
@@ -274,7 +282,7 @@ class __RegisterFormState extends State<_RegisterForm> {
 
                         loginForm.isLoading = true;
 
-                        // TODO: validar si el login es correcto
+                        //validar si el login es correcto
 
                         final String errorMessage = await authService
                             .createUser(loginForm.email, loginForm.password);
@@ -285,6 +293,8 @@ class __RegisterFormState extends State<_RegisterForm> {
                           Navigator.pushReplacementNamed(context, 'home');
                         } else {
                           print(errorMessage);
+                          mostrarAlerta(context,
+                              'El correo ingresado ya se encuentra registrado, intente con un correo electrónico diferente');
                           loginForm.isLoading = false;
                         }
                       }),

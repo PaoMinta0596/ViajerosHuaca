@@ -1,4 +1,5 @@
 import 'package:app_atractivos/src/bloc/auth_service.dart';
+import 'package:app_atractivos/src/preferencias_usuario.dart/preferencias_usuario.dart';
 import 'package:app_atractivos/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:app_atractivos/src/providers/login_form_provider.dart';
@@ -8,8 +9,10 @@ import 'package:app_atractivos/src/ui/input_decorations.dart';
 import 'package:app_atractivos/src/widgets/widgets.dart';
 
 class LoginPage extends StatelessWidget {
+  final prefs = new PreferenciasUsuario();
   @override
   Widget build(BuildContext context) {
+    // prefs.ultimaPagina = 'login';
     return Scaffold(
         body: AuthBackground(
             child: SingleChildScrollView(
@@ -122,12 +125,20 @@ class __LoginFormState extends State<_LoginForm> {
               },
             ),
             SizedBox(height: 50),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Color(0xff57BC90),
+            ElevatedButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                    elevation: MaterialStateProperty.all(10),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xff57BC90)),
+                    overlayColor: MaterialStateProperty.all(Colors.grey)),
+
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(10)),
+                // disabledColor: Colors.grey,
+                // elevation: 0,
+                // color: Color(0xff57BC90),
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                     child: Text(
@@ -145,7 +156,7 @@ class __LoginFormState extends State<_LoginForm> {
 
                         loginForm.isLoading = true;
 
-                        // TODO: validar si el login es correcto
+                        // TODO_validar si el login es correcto
 
                         final String errorMessage = await authService.login(
                             loginForm.email, loginForm.password);

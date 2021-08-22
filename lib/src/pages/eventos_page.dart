@@ -4,6 +4,7 @@ import 'package:app_atractivos/src/search/search_eventos.dart';
 import 'package:app_atractivos/src/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class EventosPage extends StatelessWidget {
   final eventosProvider = new EventosProvider();
   String query = '';
