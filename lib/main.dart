@@ -1,7 +1,8 @@
 import 'package:app_atractivos/src/bloc/theme.dart';
 import 'package:app_atractivos/src/pages/abrir_enlace_page.dart';
 import 'package:app_atractivos/src/pages/alimentacion_page.dart';
-import 'package:app_atractivos/src/pages/check_auth_page.dart';
+import 'package:app_atractivos/src/pages/datos_usuario_page.dart';
+// import 'package:app_atractivos/src/pages/check_auth_page.dart';
 import 'package:app_atractivos/src/pages/detalle_alimentacion_page.dart';
 import 'package:app_atractivos/src/pages/detalle_eventos_page.dart';
 import 'package:app_atractivos/src/pages/detalle_gastronomia.dart';
@@ -12,6 +13,7 @@ import 'package:app_atractivos/src/pages/eventos_page.dart';
 import 'package:app_atractivos/src/pages/gastronomia_page.dart';
 import 'package:app_atractivos/src/pages/hospedaje_page.dart';
 import 'package:app_atractivos/src/pages/informacion_page.dart';
+import 'package:app_atractivos/src/pages/ingreso_perfil.dart';
 import 'package:app_atractivos/src/pages/mapa_general.dart';
 import 'package:app_atractivos/src/pages/mapa_page.dart';
 import 'package:app_atractivos/src/pages/register_page.dart';
@@ -37,7 +39,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final prefs = new PreferenciasUsuario();
+    final prefs = new PreferenciasUsuario();
     // print(prefs.token);
     return MultiProvider(
       providers: [
@@ -50,15 +52,17 @@ class MyApp extends StatelessWidget {
             theme: notifier.darkTheme ? dark : light,
             debugShowCheckedModeBanner: false,
             title: 'Viajeros Huaca',
-            initialRoute: 'check',
+            initialRoute: prefs.ultimaPagina,
             routes: {
               'login': (_) => LoginPage(),
               'register': (_) => RegisterPage(),
-              'check': (BuildContext context) => CheckAuthPage(),
+              // 'check': (BuildContext context) => CheckAuthPage(),
+              'ingresoPerfil': (_) => LoginPagePerfil(),
               'menu': (BuildContext context) => MenuWidget(),
               'mapa': (BuildContext context) => MapaPage(),
               'home': (BuildContext context) => HomePage(),
               'usuario': (BuildContext context) => UsuarioPage(),
+              'datosPerfil': (BuildContext context) => DatosUsuarioPage(),
               'sitios': (BuildContext context) => SitiosPage(),
               'detalleSitio': (BuildContext context) => DetalleSitioPage(),
               'hospedaje': (BuildContext context) => HospedajePage(),

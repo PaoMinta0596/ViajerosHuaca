@@ -34,7 +34,7 @@ class _MenuWidgetState extends State<MenuWidget> {
               dense: true,
               leading: Icon(Icons.person, color: Color(0xff015249)),
               title: Text('Mi perfil', style: TextStyle(fontSize: 14)),
-              onTap: () => Navigator.pushNamed(context, 'usuario')),
+              onTap: () => Navigator.pushNamed(context, 'datosPerfil')),
           ListTile(
               dense: true,
               leading: Icon(Icons.attractions, color: Color(0xff015249)),

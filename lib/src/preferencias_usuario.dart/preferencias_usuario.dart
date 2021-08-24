@@ -28,28 +28,28 @@ class PreferenciasUsuario {
   }
 
   // GET y SET del nombre
-  // get token {
-  //   return _prefs.getString('token') ?? '';
-  // }
+  get token {
+    return _prefs.getString('token') ?? '';
+  }
 
-  // set token(String value) {
-  //   _prefs.setString('token', value);
-  // }
+  set token(String value) {
+    _prefs.setString('token', value);
+  }
 
-  // get email {
-  //   return _prefs.getString('email') ?? '';
-  // }
+  get email {
+    return _prefs.getString('email') ?? '';
+  }
 
-  // set email(String value) {
-  //   _prefs.setString('email', value);
-  // }
+  set email(String value) {
+    _prefs.setString('email', value);
+  }
 
   // GET y SET de la última página
-  // get ultimaPagina {
-  //   return _prefs.getString('ultimaPagina') ?? 'login';
-  // }
+  get ultimaPagina {
+    return _prefs.getString('ultimaPagina') ?? 'login';
+  }
 
-  // set ultimaPagina(String value) {
-  //   _prefs.setString('ultimaPagina', value);
-  // }
+  set ultimaPagina(String value) {
+    _prefs.setString('ultimaPagina', value);
+  }
 }

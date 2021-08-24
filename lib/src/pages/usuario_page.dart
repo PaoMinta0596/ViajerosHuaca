@@ -1,10 +1,9 @@
-import 'package:app_atractivos/src/bloc/auth_service.dart';
 import 'package:app_atractivos/src/models/usuarios_model.dart';
-import 'package:app_atractivos/src/preferencias_usuario.dart/preferencias_usuario.dart';
+// import 'package:app_atractivos/src/preferencias_usuario.dart/preferencias_usuario.dart';
 import 'package:app_atractivos/src/providers/usuarios_provider.dart';
 import 'package:app_atractivos/src/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 class UsuarioPage extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class UsuarioPage extends StatefulWidget {
 class _UsuarioPageState extends State<UsuarioPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-  final _prefs = new PreferenciasUsuario();
+  // final _prefs = new PreferenciasUsuario();
 
   UsuariosModel usuario = new UsuariosModel();
   final usuariosProvider = new UsuariosProvider();
@@ -23,7 +22,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context, listen: false);
+    // final authService = Provider.of<AuthService>(context, listen: false);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -31,14 +30,13 @@ class _UsuarioPageState extends State<UsuarioPage> {
         centerTitle: true,
         actions: [
           IconButton(
-              icon: Icon(Icons.logout),
+              icon: Icon(
+                Icons.home,
+                size: 35,
+              ),
               onPressed: () {
-                authService.logout();
-                // _prefs.email = '';
-                // _prefs.token = '';
-                // _prefs.ultimaPagina = '';
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    'login', (Route<dynamic> route) => false);
+                    'home', (Route<dynamic> route) => false);
                 // Navigator.pushReplacementNamed(context, 'login');
               })
         ],
@@ -58,11 +56,22 @@ class _UsuarioPageState extends State<UsuarioPage> {
                   child: Column(
                     children: [
                       _crearAvatar(),
+                      SizedBox(height: 20),
                       _nombreUsuario(),
+                      SizedBox(height: 20),
                       _apellidoUsuario(),
+                      SizedBox(height: 20),
                       _edadUsuario(),
+                      SizedBox(height: 20),
                       _paisUsuario(),
+                      SizedBox(height: 20),
                       _ciudadUsuario(),
+                      ListTile(
+                        dense: true,
+                        subtitle: Text('Sitios turísticos preferidos',
+                            style: TextStyle(fontSize: 14)),
+                      ),
+                      _preferencia(),
                       _crearBoton()
                     ],
                   ),
@@ -180,6 +189,39 @@ class _UsuarioPageState extends State<UsuarioPage> {
     );
   }
 
+  Widget _preferencia() {
+    return DropdownButtonFormField(
+      hint: Text('Categoría favorita'),
+      decoration: InputDecoration(
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xff57BC90)),
+        ),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xff57BC90), width: 2)),
+        // prefixIcon: Icon(Icons.border_color, color: Color(0xff57BC90)),
+      ),
+      value: usuario.sitioPreferido,
+      isDense: true,
+      onChanged: (String newValue) {
+        usuario.sitioPreferido = newValue;
+      },
+      items: ['Naturales', 'Culturales'].map((String value) {
+        return DropdownMenuItem(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      validator: (value) {
+        if (value == null) {
+          return 'Seleccione una categoría de sitio turístico';
+        } else {
+          usuario.sitioPreferido = value;
+          return null;
+        }
+      },
+    );
+  }
+
   Widget _crearBoton() {
     return Container(
       alignment: Alignment.topCenter,
@@ -187,7 +229,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
       child: ElevatedButton.icon(
         onPressed: (_guardando) ? null : _submit,
         icon: Icon(Icons.save),
-        label: Text('Actualizar datos'),
+        label: Text('Actualizar datos', style: TextStyle(fontSize: 19)),
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(10),
           backgroundColor: MaterialStateProperty.all<Color>(Color(0xff015249)),
@@ -207,6 +249,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
       _guardando = false;
     });
     mostrarSnackBar('Datos actualizados');
+    Navigator.pushReplacementNamed(context, 'datosPerfil');
   }
 
   void mostrarSnackBar(String mensaje) {

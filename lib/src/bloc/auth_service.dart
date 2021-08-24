@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:app_atractivos/src/preferencias_usuario.dart/preferencias_usuario.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService extends ChangeNotifier {
@@ -9,7 +9,7 @@ class AuthService extends ChangeNotifier {
   final String _firebaseToken = 'AIzaSyB4NdodQfUZrYR63-PlRE0TGzrT74O6Vkw';
   final _prefs = new PreferenciasUsuario();
 
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
 
   Future<String> createUser(String email, String password) async {
     final Map<String, dynamic> authData = {
@@ -27,10 +27,10 @@ class AuthService extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       // return decodedResp['idToken'];
-      // _prefs.email = decodedResp['email'];
-      // _prefs.token = decodedResp['idToken'];
-      await storage.write(key: 'email', value: decodedResp['email']);
-      await storage.write(key: 'token', value: decodedResp['idToken']);
+      _prefs.email = decodedResp['email'];
+      _prefs.token = decodedResp['idToken'];
+      // await storage.write(key: 'email', value: decodedResp['email']);
+      // await storage.write(key: 'token', value: decodedResp['idToken']);
       return null;
     } else {
       return decodedResp['error']['message'];
@@ -53,22 +53,22 @@ class AuthService extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       // return decodedResp['idToken'];
-      // _prefs.email = decodedResp['email'];
-      // _prefs.token = decodedResp['idToken'];
-      await storage.write(key: 'email', value: decodedResp['email']);
-      await storage.write(key: 'token', value: decodedResp['idToken']);
+      _prefs.email = decodedResp['email'];
+      _prefs.token = decodedResp['idToken'];
+      // await storage.write(key: 'email', value: decodedResp['email']);
+      // await storage.write(key: 'token', value: decodedResp['idToken']);
       return null;
     } else {
       return decodedResp['error']['message'];
     }
   }
 
-  Future logout() async {
-    await storage.delete(key: 'token');
-    return;
-  }
+  // Future logout() async {
+  //   await storage.delete(key: 'token');
+  //   return;
+  // }
 
-  Future<String> readToken() async {
-    return await storage.read(key: 'token') ?? '';
-  }
+  // Future<String> readToken() async {
+  //   return await storage.read(key: 'token') ?? '';
+  // }
 }
